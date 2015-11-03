@@ -1,4 +1,4 @@
-require 'foreman_plugin_template/engine'
+require 'foreman_orchestration/engine'
 
-module ForemanPluginTemplate
+module ForemanOrchestration
 end

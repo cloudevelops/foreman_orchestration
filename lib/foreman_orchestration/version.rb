@@ -1,3 +1,3 @@
-module ForemanPluginTemplate
+module ForemanOrchestration
   VERSION = '0.0.1'
 end

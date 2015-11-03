@@ -1,4 +1,4 @@
-# ForemanPluginTemplate
+# ForemanOrchestration
 
 *Introdction here*
 

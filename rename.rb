@@ -35,8 +35,13 @@ Find.find('.') do |path|
   next if path == './rename.rb'
 
   # Change content on all files
-  system(%(sed 's/foreman_plugin_template/#{snake}/g' -i #{path} ))
-  system(%(sed 's/ForemanPluginTemplate/#{camel}/g'   -i #{path} ))
+  if RUBY_PLATFORM.match(/darwin/)
+    system(%(sed -i '' -- 's/foreman_plugin_template/#{snake}/g' #{path} ))
+    system(%(sed -i '' -- 's/ForemanPluginTemplate/#{camel}/g' #{path} ))
+  else
+    system(%(sed 's/foreman_plugin_template/#{snake}/g' -i #{path} ))
+    system(%(sed 's/ForemanPluginTemplate/#{camel}/g'   -i #{path} ))
+  end
 end
 
 Find.find('.') do |path|
@@ -58,7 +63,7 @@ end
 # Clean up
 FileUtils.rm_rf(old_dirs)
 
-FileUtils.mv('README.plugin.md', 'README.md')
+# FileUtils.mv('README.plugin.md', 'README.md')
 
 puts 'All done!'
 puts "Add this to Foreman's bundler configuration:"
