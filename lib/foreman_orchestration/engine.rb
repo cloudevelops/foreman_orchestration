@@ -28,12 +28,13 @@ module ForemanOrchestration
         # Add a new role called 'Discovery' if it doesn't exist
         role 'ForemanOrchestration', [:view_foreman_orchestration]
 
-        # add menu entry
-        menu :top_menu, :template,
-             url_hash: { controller: :'foreman_orchestration/hosts', action: :new_action },
-             caption: 'ForemanOrchestration',
-             parent: :hosts_menu,
-             after: :hosts
+        # TODO: change controllers and actions to the appropriate ones
+        sub_menu :top_menu, :orchestration, :after=> :infrastructure_menu do
+          menu :top_menu, :all_stacks, :url_hash => { controller: :'foreman_orchestration/hosts', action: :new_action }
+          menu :top_menu, :new_stack, :url_hash => { controller: :'foreman_orchestration/hosts', action: :new_action }
+          menu :top_menu, :resources, :url_hash => { controller: :'foreman_orchestration/hosts', action: :new_action }
+          menu :top_menu, :templates, :url_hash => { controller: :'foreman_orchestration/hosts', action: :new_action }
+        end
 
         # add dashboard widget
         widget 'foreman_orchestration_widget', name: N_('Foreman plugin template widget'), sizex: 4, sizey: 1
