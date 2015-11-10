@@ -1,0 +1,26 @@
+<% title _("Stacks") %>
+<% title_actions display_link_if_authorized(_("New Stack"), hash_for_new_stack_path), help_path %>
+
+<%# add: sorting, filters, checkboxes %>
+<table class="table table-bordered table-striped table-two-pane">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Creation time</th>
+      <th>Updated time</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for stack in @stacks %>
+    <tr>
+      <td><%= h stack.name %></td>
+      <td><%= h stack.status %></td>
+      <td><%= stack.creation_time %></td>
+      <td><%= stack.updated_time %></td>
+      <td></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

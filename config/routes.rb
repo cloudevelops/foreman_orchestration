@@ -1,3 +1,7 @@
 Rails.application.routes.draw do
-  get 'new_action', to: 'foreman_orchestration/hosts#new_action'
+  scope :module => :foreman_orchestration do
+    resources :stacks, only: [:index, :new, :create]
+    resources :resources, only: [:index]
+    resources :templates, only: [:index]
+  end
 end
