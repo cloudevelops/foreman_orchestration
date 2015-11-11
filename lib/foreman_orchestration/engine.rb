@@ -60,7 +60,9 @@ module ForemanOrchestration
     # Include concerns in this config.to_prepare block
     config.to_prepare do
       begin
-        Host::Managed.send(:include, ForemanOrchestration::HostExtensions)
+        # TODO: cleanup here
+        # Host::Managed.send(:include, ForemanOrchestration::HostExtensions)
+        Foreman::Model::Openstack.send(:include, ForemanOrchestration::OpenstackExtensions)
         HostsHelper.send(:include, ForemanOrchestration::HostsHelperExtensions)
       rescue => e
         Rails.logger.warn "ForemanOrchestration: skipping engine hook (#{e})"
