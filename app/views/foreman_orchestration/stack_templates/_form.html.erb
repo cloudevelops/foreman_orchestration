@@ -1,0 +1,8 @@
+<%= form_for @template, url: (@template.new_record? ? stack_templates_path : stack_template_path(@template)) do |f| %>
+  <%= base_errors_for @template %>
+
+  <%= text_f f, :name %>
+  <%= textarea_f f, :template, size: 'col-md-8', rows: 20 %>
+
+  <%= submit_or_cancel f %>
+<% end %>
