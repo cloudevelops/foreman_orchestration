@@ -9,3 +9,4 @@ locale/*.mo
 locale/*/*.pox
 tags
 .idea
+Gemfile.lock

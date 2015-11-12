@@ -21,6 +21,7 @@ module ForemanOrchestration
         requires_foreman '>= 1.4'
 
         # Add permissions
+        # TODO: update
         security_block :foreman_orchestration do
           permission :view_foreman_orchestration, :'foreman_orchestration/hosts' => [:new_action]
         end
@@ -37,6 +38,7 @@ module ForemanOrchestration
         end
 
         # add dashboard widget
+        # TODO: remove?
         widget 'foreman_orchestration_widget', name: N_('Foreman plugin template widget'), sizex: 4, sizey: 1
       end
     end

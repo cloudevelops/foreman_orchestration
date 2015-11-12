@@ -1,0 +1,29 @@
+<%# add: sorting, filters, checkboxes %>
+<table class="table table-bordered table-striped table-two-pane">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Status</th>
+    <th>Creation time</th>
+    <th>Updated time</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% for stack in @stacks %>
+    <tr>
+      <td><%= h stack.stack_name %></td>
+      <td><%= h stack.description %></td>
+      <td>
+        <span data-original-title="<%= h stack.stack_status_reason %>" rel="twipsy">
+          <%= h stack.stack_status %>
+        </span>
+      </td>
+      <td><%= stack.creation_time %></td>
+      <td><%= stack.updated_time %></td>
+      <td></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

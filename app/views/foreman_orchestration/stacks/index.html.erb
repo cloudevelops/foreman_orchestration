@@ -1,32 +1,17 @@
+<% javascript 'foreman_orchestration/stacks' %>
+
 <% title _("Stacks") %>
 <% title_actions display_link_if_authorized(_("New Stack"), hash_for_new_stack_path), help_path %>
 
-<%# add: sorting, filters, checkboxes %>
-<table class="table table-bordered table-striped table-two-pane">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Status</th>
-      <th>Creation time</th>
-      <th>Updated time</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-  <% for stack in @stacks %>
-    <tr>
-      <td><%= h stack.stack_name %></td>
-      <td><%= h stack.description %></td>
-      <td>
-        <span data-original-title="<%= h stack.stack_status_reason %>" rel="twipsy">
-          <%= h stack.stack_status %>
-        </span>
-      </td>
-      <td><%= stack.creation_time %></td>
-      <td><%= stack.updated_time %></td>
-      <td></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+<div class="form-group">
+  <div class="row">
+    <div class="col-md-4">
+      <%= select_tag :tenants, options_from_collection_for_select(@tenants, 'name', 'name', @tenant),
+                     {:class => 'form-control', :'data-url' => for_tenant_stacks_path, :onchange => 'stacksTenantSelected(this);'} %>
+    </div>
+  </div>
+</div>
+
+<div id="stacks-list">
+  <%= render 'stacks' %>
+</div>
