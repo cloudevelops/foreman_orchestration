@@ -1,0 +1,18 @@
+<% javascript 'foreman_orchestration/stacks' %>
+<% stylesheet 'foreman_orchestration/templates' %>
+
+<%= form_tag stacks_path do %>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-2">
+        <%= label_tag :template_id, 'Chose a template' %>
+      </div>
+      <div class="col-md-6">
+        <%= select_tag :template_id,
+                       options_from_collection_for_select(ForemanOrchestration::StackTemplate.for_select_tag, 'id', 'name'),
+                       {:include_blank => true, :class => 'form-control', :'data-url' => with_params_stack_templates_path ,:onchange => 'stacksLoadTemplateWithParams(this)'} %>
+      </div>
+    </div>
+  </div>
+  <div id="template-with-params"></div>
+<% end %>

@@ -12,9 +12,17 @@ module ForemanOrchestration
       stub_stacks
     end
 
+    # 1. select a template
+    # 2. load the template and prepare a form with parameters
+    # 3. submit the form
     def new
     end
 
+    # params:
+    # - tenant name
+    # - stack_name (^[a-zA-Z][a-zA-Z0-9_.-]*$)
+    # - template
+    # - parameters
     def create
     end
 

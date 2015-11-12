@@ -13,3 +13,16 @@ function stacksTenantSelected(item) {
     });
   }
 }
+
+function stacksLoadTemplateWithParams(item) {
+  var $item = $(item);
+  var templateId = $item.val();
+  if (templateId === '') {
+    return false;
+  } else {
+    var url = $item.data('url');
+    var params = $.param({template_id: templateId});
+    var $container = $('#template-with-params');
+    $container.load(url, params);
+  }
+}

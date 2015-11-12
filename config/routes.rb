@@ -6,6 +6,10 @@ Rails.application.routes.draw do
       end
     end
     resources :resources, only: [:index]
-    resources :stack_templates
+    resources :stack_templates do
+      collection do
+        get :with_params
+      end
+    end
   end
 end

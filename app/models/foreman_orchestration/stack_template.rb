@@ -4,5 +4,9 @@ module ForemanOrchestration
 
     validates :name, presence: true
     validates :template, presence: true
+
+    def self.for_select_tag
+      select([:id, :name]).order(:name).all
+    end
   end
 end

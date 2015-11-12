@@ -10,6 +10,9 @@ module ForemanOrchestration
       @template = StackTemplate.new
     end
 
+    # TODO: there is an API for template validation:
+    # http://developer.openstack.org/api-ref-orchestration-v1.html#template_validate
+    # Maybe we can use it here?
     def create
       @template = StackTemplate.new(template_params)
       if @template.save
@@ -33,6 +36,12 @@ module ForemanOrchestration
       else
         process_error object: @template
       end
+    end
+
+    # ajax
+    def with_params
+      @template = StackTemplate.find(params[:template_id])
+      render partial: 'with_params'
     end
 
     private
