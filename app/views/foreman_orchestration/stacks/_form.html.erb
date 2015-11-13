@@ -1,18 +1,32 @@
-<% javascript 'foreman_orchestration/stacks' %>
-<% stylesheet 'foreman_orchestration/templates' %>
-
-<%= form_tag stacks_path do %>
-  <div class="form-group">
-    <div class="row">
-      <div class="col-md-2">
-        <%= label_tag :template_id, 'Chose a template' %>
+<%= form_for :stack, url: stacks_path do |f| %>
+  <%= selectable_f f, :tenant,
+                   options_from_collection_for_select(@tenants, 'name', 'name', @tenant),
+                   {}, {label: _('Tenant'), required: true} %>
+  <%= text_f f, :name, required: true, label: _('Stack name') %>
+  <%= selectable_f f, :template,
+                   options_from_collection_for_select(ForemanOrchestration::StackTemplate.for_select_tag, 'id', 'name', @template.try(:id)),
+                   {include_blank: _('Choose a template')},
+                   {:label => _('Template'), :'data-url' => params_for_template_stacks_path ,
+                    :onchange => 'stacksLoadTemplateWithParams(this)', required: true,
+                    :help_inline => :indicator} %>
+  <div id="template-with-params">
+    <% if @template %>
+      <%= f.hidden_field :template_id, value: @template.id %>
+      <h4>Review template body:</h4>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-8">
+            <pre class="stack-template-body"><%= h @template.template %></pre>
+          </div>
+        </div>
       </div>
-      <div class="col-md-6">
-        <%= select_tag :template_id,
-                       options_from_collection_for_select(ForemanOrchestration::StackTemplate.for_select_tag, 'id', 'name'),
-                       {:include_blank => true, :class => 'form-control', :'data-url' => with_params_stack_templates_path ,:onchange => 'stacksLoadTemplateWithParams(this)'} %>
-      </div>
-    </div>
+      <% unless @template.template_parameters.empty? %>
+        <h4>Specify parameters for the chosen template:</h4>
+        <% @template.template_parameters.each do |param, _| %>
+          <%= text_f f, [:parameter, param], label: param, required: true %>
+        <% end %>
+      <% end %>
+      <%= submit_or_cancel f %>
+    <% end %>
   </div>
-  <div id="template-with-params"></div>
 <% end %>

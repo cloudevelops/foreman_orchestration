@@ -38,12 +38,6 @@ module ForemanOrchestration
       end
     end
 
-    # ajax
-    def with_params
-      @template = StackTemplate.find(params[:template_id])
-      render partial: 'with_params'
-    end
-
     private
 
     def template_params

@@ -12,10 +12,11 @@ module ForemanOrchestration
       stub_stacks
     end
 
-    # 1. select a template
-    # 2. load the template and prepare a form with parameters
-    # 3. submit the form
     def new
+      # compute_resource = Foreman::Model::Openstack.first
+      # @tenants = compute_resource.tenants
+      # @tenant = compute_resource.tenant
+      stub_tenants
     end
 
     # params:
@@ -24,6 +25,14 @@ module ForemanOrchestration
     # - template
     # - parameters
     def create
+      @stack = Stack.new(new_stack_params)
+      if @stack.save
+        redirect_to stacks_path, notice: 'Stack is being created now'
+      else
+        @tenants = @stack.compute_resource.tenants
+        flash.now[:error] = 'Unable to create a new stack: check all requried fields'
+        render :new
+      end
     end
 
     # ajax methods
@@ -35,7 +44,24 @@ module ForemanOrchestration
       # TODO: what to do with errors? (incorrect tenant name etc.)
     end
 
+    def params_for_template
+      # TODO: need to simplify this
+      stub_tenants
+      @template = StackTemplate.find(params[:template_id])
+      render partial: 'form'
+    end
+
     private
+
+    def new_stack_params
+      params.fetch(:stack)
+        .slice(:tenant, :name, :template_id, :parameters)
+        .merge(compute_resource: default_compute_resource)
+    end
+
+    def default_compute_resource
+      Foreman::Model::Openstack.first
+    end
 
     def stub_tenants
       @tenants = [

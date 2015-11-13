@@ -12,12 +12,10 @@ module ForemanOrchestration
       client.stacks
     end
 
-    def create_stack
-      # TODO: delegate?
-    end
-
-    def destroy_stack
-      # TODO: delegate?
+    def create_stack(tenant, params)
+      credentials = fog_credentials.merge(openstack_tenant: tenant)
+      client = make_orchestration_client(credentials)
+      client.create_stack(params)
     end
 
     private

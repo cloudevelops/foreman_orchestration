@@ -4,12 +4,14 @@ function stacksTenantSelected(item) {
   if (tenant === '') {
     return false;
   } else {
+    $item.indicator_show();
     var url = $item.data('url');
     var params = $.param({tenant: tenant});
     var $stacks = $('#stacks-list');
     $stacks.hide();
     $stacks.load(url, params, function () {
       $stacks.show();
+      $item.indicator_hide();
     });
   }
 }
@@ -20,9 +22,12 @@ function stacksLoadTemplateWithParams(item) {
   if (templateId === '') {
     return false;
   } else {
+    $item.indicator_show();
     var url = $item.data('url');
     var params = $.param({template_id: templateId});
     var $container = $('#template-with-params');
-    $container.load(url, params);
+    $container.load(url + ' #template-with-params', params, function () {
+      $item.indicator_hide();
+    });
   }
 }

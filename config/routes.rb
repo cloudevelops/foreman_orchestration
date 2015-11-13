@@ -3,13 +3,10 @@ Rails.application.routes.draw do
     resources :stacks, only: [:index, :new, :create] do
       collection do
         get :for_tenant
+        get :params_for_template
       end
     end
     resources :resources, only: [:index]
-    resources :stack_templates do
-      collection do
-        get :with_params
-      end
-    end
+    resources :stack_templates
   end
 end
