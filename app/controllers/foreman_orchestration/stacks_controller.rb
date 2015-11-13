@@ -13,25 +13,16 @@ module ForemanOrchestration
     end
 
     def new
-      # compute_resource = Foreman::Model::Openstack.first
-      # @tenants = compute_resource.tenants
-      # @tenant = compute_resource.tenant
-      stub_tenants
+      @stack = Stack.new(compute_resource: default_compute_resource)
     end
 
-    # params:
-    # - tenant name
-    # - stack_name (^[a-zA-Z][a-zA-Z0-9_.-]*$)
-    # - template
-    # - parameters
     def create
       @stack = Stack.new(new_stack_params)
       if @stack.save
-        redirect_to stacks_path, notice: 'Stack is being created now'
+        process_success object: @stack,
+                        success_msg: "Stack #{@stack.name} is being created now"
       else
-        @tenants = @stack.compute_resource.tenants
-        flash.now[:error] = 'Unable to create a new stack: check all requried fields'
-        render :new
+        process_error object: @stack
       end
     end
 
@@ -45,22 +36,21 @@ module ForemanOrchestration
     end
 
     def params_for_template
-      # TODO: need to simplify this
-      stub_tenants
-      @template = StackTemplate.find(params[:template_id])
-      render partial: 'form'
+      template = StackTemplate.find(params[:template_id])
+      render partial: 'params', locals: {template: template, parameters: {}}
     end
 
     private
 
     def new_stack_params
-      params.fetch(:stack)
+      params.fetch(:foreman_orchestration_stack)
         .slice(:tenant, :name, :template_id, :parameters)
         .merge(compute_resource: default_compute_resource)
     end
 
     def default_compute_resource
-      Foreman::Model::Openstack.first
+      # Foreman::Model::Openstack.first
+      stub_compute_resource
     end
 
     def stub_tenants
@@ -129,6 +119,11 @@ module ForemanOrchestration
           updated_time: nil
         }
       ].map { |h| OpenStruct.new h }
+    end
+
+    def stub_compute_resource
+      stub_tenants
+      OpenStruct.new(tenants: @tenants, tenant: @tenant)
     end
   end
 end

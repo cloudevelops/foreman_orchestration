@@ -1,7 +1,9 @@
 module ForemanOrchestration
   class Stack
     include ActiveModel::Validations
-    attr_accessor :compute_resource, :tenant, :name, :template, :template_id, :parameters
+    include ActiveModel::Conversion
+
+    attr_accessor :compute_resource, :tenant, :name, :template_id, :parameters
 
     validates :compute_resource, presence: true
     validates :tenant, presence: true
@@ -9,15 +11,15 @@ module ForemanOrchestration
     validates :template_id, presence: true
 
     def initialize(params = {})
-      compute_resource = params[:compute_resource]
-      tenant = params[:tenant]
-      name = params[:name]
-      template_id = params[:template_id]
-      parameters = params[:parameters]
+      @compute_resource = params[:compute_resource]
+      @tenant = params[:tenant]
+      @name = params[:name]
+      @template_id = params[:template_id]
+      @parameters = params[:parameters]
     end
 
-    def to_key
-      name
+    def persisted?
+      false
     end
 
     def save
@@ -30,6 +32,16 @@ module ForemanOrchestration
         compute_resource.create_stack(tenant, params)
       else
         false
+      end
+    end
+
+    def compute_resource_tenants
+      compute_resource.tenants
+    end
+
+    def template
+      if template_id
+        @template ||= StackTemplate.find(template_id)
       end
     end
 

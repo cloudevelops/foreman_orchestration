@@ -26,7 +26,7 @@ function stacksLoadTemplateWithParams(item) {
     var url = $item.data('url');
     var params = $.param({template_id: templateId});
     var $container = $('#template-with-params');
-    $container.load(url + ' #template-with-params', params, function () {
+    $container.load(url, params, function () {
       $item.indicator_hide();
     });
   }

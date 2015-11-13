@@ -1,0 +1,30 @@
+<%= hidden_field_tag 'foreman_orchestration_stack[template_id]', template.id %>
+<h4>Review template body:</h4>
+<div class="clearfix">
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-8">
+        <pre class="stack-template-body"><%= h template.template %></pre>
+      </div>
+    </div>
+  </div>
+</div>
+<% unless template.template_parameters.empty? %>
+  <h4>Specify parameters for the chosen template:</h4>
+  <% template.template_parameters.each do |param, _| %>
+    <div class="clearfix">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-2 control-label">
+            <%= label_tag param, param %>
+          </div>
+          <div class="col-md-6">
+            <%= text_field_tag "foreman_orchestration_stack[parameters[#{param}]]",
+                               parameters[param], class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+<%= submit_tag 'Submit', class: 'btn btn-primary' %>
