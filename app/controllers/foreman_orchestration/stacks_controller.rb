@@ -30,11 +30,8 @@ module ForemanOrchestration
         name: params[:name],
         tenant: params[:tenant]
       )
-      if @stack.destroy
-        process_success object: @stack
-      else
-        process_error object: @stack
-      end
+      @stack.destroy
+      redirect_to stacks_path, notice: "Stack #{@stack.name} is being deleted now"
     end
 
     # ajax methods
