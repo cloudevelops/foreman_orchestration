@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       collection do
         get :for_tenant
         get :params_for_template
+        delete :destroy_stack
       end
     end
     resources :resources, only: [:index]

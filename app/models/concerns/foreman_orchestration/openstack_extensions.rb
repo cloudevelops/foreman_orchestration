@@ -18,6 +18,12 @@ module ForemanOrchestration
       client.create_stack(params)
     end
 
+    def delete_stack(tenant, stack)
+      credentials = fog_credentials.merge(openstack_tenant: tenant)
+      client = make_orchestration_client(credentials)
+      client.delete_stack(stack)
+    end
+
     private
 
     def orchestration_client

@@ -38,6 +38,17 @@ module ForemanOrchestration
       end
     end
 
+    def destroy
+      all_stacks = compute_resource.stacks_for_tenant
+      stack = all_stacks.find { |s| s.stack_name == name }
+      if stack
+        compute_resource.delete_stack(tenant, stack)
+      else
+        message = "Cannot find stack '#{name}' in tenant '#{tenant}'"
+        raise ActiveRecord::RecordNotFound, message
+      end
+    end
+
     def compute_resource_tenants
       compute_resource.tenants
     end

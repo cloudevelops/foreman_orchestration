@@ -24,6 +24,19 @@ module ForemanOrchestration
       end
     end
 
+    def destroy_stack
+      @stack = Stack.new(
+        compute_resource: default_compute_resource,
+        name: params[:name],
+        tenant: params[:tenant]
+      )
+      if @stack.destroy
+        process_success object: @stack
+      else
+        process_error object: @stack
+      end
+    end
+
     # ajax methods
     def for_tenant
       # TODO: what to do with errors? (incorrect tenant name etc.)
