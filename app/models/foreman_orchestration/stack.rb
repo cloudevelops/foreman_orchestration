@@ -15,7 +15,7 @@ module ForemanOrchestration
       @tenant = params[:tenant]
       @name = params[:name]
       @template_id = params[:template_id]
-      @parameters = params[:parameters]
+      @parameters = params[:parameters] || {}
     end
 
     def persisted?
@@ -25,9 +25,12 @@ module ForemanOrchestration
     def save
       if valid?
         params = {
+          files: {},
+          disable_rollback: true,
+          parameters: parameters,
           stack_name: name,
-          template: load_yaml_template,
-          parameters: parameters
+          environment: {},
+          template: load_yaml_template
         }
         compute_resource.create_stack(tenant, params)
       else
@@ -48,7 +51,8 @@ module ForemanOrchestration
     private
 
     def load_yaml_template
-      StackTemplate.find(template_id).template
+      template = StackTemplate.find(template_id).template
+      YAML.load(template)
     end
   end
 end
