@@ -39,7 +39,7 @@ module ForemanOrchestration
     end
 
     def destroy
-      all_stacks = compute_resource.stacks_for_tenant
+      all_stacks = compute_resource.stacks_for_tenant(tenant)
       stack = all_stacks.find { |s| s.stack_name == name }
       if stack
         compute_resource.delete_stack(tenant, stack)
