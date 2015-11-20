@@ -41,7 +41,8 @@ module ForemanOrchestration
     def for_tenant
       # TODO: what to do with errors? (incorrect tenant name etc.)
       compute_resource = default_compute_resource
-      @stacks = compute_resource.stacks_for_tenant(params[:tenant])
+      @tenant = params[:tenant]
+      @stacks = compute_resource.stacks_for_tenant(@tenant)
       render partial: 'stacks'
     end
 
