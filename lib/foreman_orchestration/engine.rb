@@ -34,7 +34,6 @@ module ForemanOrchestration
           menu :top_menu, :all_stacks, :url_hash => { controller: :'foreman_orchestration/stacks', action: :index }
           menu :top_menu, :new_stack, :url_hash => { controller: :'foreman_orchestration/stacks', action: :new }
           menu :top_menu, :stack_templates, :url_hash => { controller: :'foreman_orchestration/stack_templates', action: :index }
-          menu :top_menu, :resources, :url_hash => { controller: :'foreman_orchestration/resources', action: :index }
         end
 
         # add dashboard widget

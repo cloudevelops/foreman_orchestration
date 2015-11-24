@@ -7,7 +7,6 @@ Rails.application.routes.draw do
         delete :destroy_stack
       end
     end
-    resources :resources, only: [:index]
     resources :stack_templates
   end
 end
