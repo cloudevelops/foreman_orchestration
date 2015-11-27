@@ -4,6 +4,14 @@
 <%= form_for :stack do %>
   <% title _("All Stacks") %>
   <%= render partial: 'compute_resources' %>
-  <%= render partial: 'foreman_orchestration/tenants/for_select' %>
-  <div id="stacks-list"></div>
+  <div id="tenants-list">
+    <% if @tenants %>
+      <%= render partial: 'foreman_orchestration/tenants/for_select' %>
+    <% end %>
+  </div>
+  <div id="stacks-list">
+    <% if @stacks %>
+      <%= render template: 'foreman_orchestration/stacks/index', layout: nil %>
+    <% end %>
+  </div>
 <% end %>

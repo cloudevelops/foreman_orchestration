@@ -6,14 +6,12 @@ function stacksComputeResourceSelected(item) {
   } else {
     $item.indicator_show();
     // TODO: use url helper somehow?
-    var url = '/compute_resources/' + computeResource +
-        '/tenants/for_select #tenants-list';
+    var url = '/compute_resources/' + computeResource + '/tenants/for_select';
     var $tenants = $('#tenants-list');
     $('#stacks-list').empty();
-    $tenants.hide();
+    $tenants.empty();
     $tenants.load(url, function () {
       $tenants.find('select').select2({allowClear: true});
-      $tenants.show();
       $item.indicator_hide();
     });
   }
@@ -28,9 +26,8 @@ function stacksTenantSelected(item) {
     $item.indicator_show();
     var url = $item.data('url') + '/' + tenant + '/stacks';
     var $stacks = $('#stacks-list');
-    $stacks.hide();
+    $stacks.empty();
     $stacks.load(url, function () {
-      $stacks.show();
       $item.indicator_hide();
     });
   }

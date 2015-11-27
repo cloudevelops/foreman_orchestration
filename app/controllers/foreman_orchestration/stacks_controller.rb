@@ -5,6 +5,10 @@ module ForemanOrchestration
       unless @compute_resources.empty?
         @compute_resource = @compute_resources.first
         @tenants = @compute_resource.orchestration_clients
+        unless @tenants.empty?
+          @tenant = @tenants.find { |t| t.name == @compute_resource.tenant }
+          @stacks = @tenant.stacks
+        end
       end
     end
 
