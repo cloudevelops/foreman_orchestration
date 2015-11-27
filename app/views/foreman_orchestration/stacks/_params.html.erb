@@ -9,18 +9,19 @@
     </div>
   </div>
 </div>
-<% unless template.template_parameters.empty? %>
+<% unless template.parameters.empty? %>
   <h4>Specify parameters for the chosen template:</h4>
-  <% template.template_parameters.each do |param, _| %>
+  <% template.parameters.each do |key, value| %>
     <div class="clearfix">
       <div class="form-group">
         <div class="row">
           <div class="col-md-2 control-label">
-            <%= label_tag param, param %>
+            <%= label_tag key, key %>
           </div>
           <div class="col-md-6">
-            <%= text_field_tag "foreman_orchestration_stack[parameters[#{param}]]",
-                               parameters[param], class: 'form-control' %>
+            <%= text_field_tag "foreman_orchestration_stack[parameters[#{key}]]",
+                               parameters[key] || value['default'],
+                               class: 'form-control' %>
           </div>
         </div>
       </div>

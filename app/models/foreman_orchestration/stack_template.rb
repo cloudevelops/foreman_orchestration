@@ -17,7 +17,7 @@ module ForemanOrchestration
       select([:id, :name]).order(:name).all
     end
 
-    def template_parameters
+    def parameters
       @template_parameters ||= parse_parameters
     end
 
