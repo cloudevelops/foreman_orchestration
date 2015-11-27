@@ -1,0 +1,9 @@
+<% javascript 'foreman_orchestration/stacks' %>
+<% stylesheet 'foreman_orchestration/stacks' %>
+
+<%= form_for :stack do %>
+  <% title _("All Stacks") %>
+  <%= render partial: 'compute_resources' %>
+  <%= render partial: 'foreman_orchestration/tenants/for_select' %>
+  <div id="stacks-list"></div>
+<% end %>

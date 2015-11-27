@@ -31,9 +31,9 @@ module ForemanOrchestration
 
         # TODO: change controllers and actions to the appropriate ones
         sub_menu :top_menu, :orchestration, :after=> :infrastructure_menu do
-          menu :top_menu, :all_stacks, :url_hash => { controller: :'foreman_orchestration/stacks', action: :index }
-          menu :top_menu, :new_stack, :url_hash => { controller: :'foreman_orchestration/stacks', action: :new }
-          menu :top_menu, :stack_templates, :url_hash => { controller: :'foreman_orchestration/stack_templates', action: :index }
+          menu :top_menu, :all_stacks, :url_hash => { controller: :'foreman_orchestration/stacks', action: :all }
+          # menu :top_menu, :new_stack, :url_hash => { controller: :'foreman_orchestration/stacks', action: :new }
+          # menu :top_menu, :stack_templates, :url_hash => { controller: :'foreman_orchestration/stack_templates', action: :index }
         end
 
         # add dashboard widget
@@ -61,10 +61,8 @@ module ForemanOrchestration
     # Include concerns in this config.to_prepare block
     config.to_prepare do
       begin
-        # TODO: cleanup here
-        # Host::Managed.send(:include, ForemanOrchestration::HostExtensions)
         Foreman::Model::Openstack.send(:include, ForemanOrchestration::OpenstackExtensions)
-        HostsHelper.send(:include, ForemanOrchestration::HostsHelperExtensions)
+        LayoutHelper.send(:include, ForemanOrchestration::LayoutHelperExtensions)
       rescue => e
         Rails.logger.warn "ForemanOrchestration: skipping engine hook (#{e})"
       end

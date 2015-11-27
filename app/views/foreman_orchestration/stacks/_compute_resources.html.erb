@@ -1,0 +1,13 @@
+<% if @compute_resources.empty? %>
+  <div class="alert alert-info">
+    There are no compute resources. But you can create a new one
+    <%= link_to 'here', new_compute_resource_path %>
+  </div>
+<% else %>
+  <%= selectable_tag :compute_resource,
+                     options_from_collection_for_select(@compute_resources, 'id', 'name', @compute_resource.id),
+                     {:label => _('Compute resource'),
+                      :onchange => 'stacksComputeResourceSelected(this);',
+                      :help_inline => :indicator, :include_blank => true}
+  %>
+<% end %>

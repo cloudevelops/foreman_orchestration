@@ -1,0 +1,17 @@
+<div id="tenants-list">
+  <% unless @tenants.nil? %>
+    <% if @tenants.empty? %>
+      <div class="alert alert-info">
+        Selected compute resource doesn't have any tenant
+      </div>
+    <% else %>
+      <%= selectable_tag :tenant,
+                         options_from_collection_for_select(@tenants, 'id', 'name'),
+                         {:label => _('Tenant'), :onchange => 'stacksTenantSelected(this);',
+                          :'data-url' => compute_resource_tenants_path(@compute_resource),
+                          :help_inline => :indicator,
+                          :include_blank => true}
+      %>
+    <% end %>
+  <% end %>
+</div>

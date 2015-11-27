@@ -1,18 +1,48 @@
-<% javascript 'foreman_orchestration/stacks' %>
-
-<% title _("Stacks") %>
-<% title_actions display_link_if_authorized(_("New Stack"), hash_for_new_stack_path), help_path %>
-
-<div class="form-group">
-  <div class="row">
-    <div class="col-md-4">
-      <%= select_tag :tenants, options_from_collection_for_select(@tenants, 'name', 'name', @tenant),
-                     {:class => 'form-control', :'data-url' => for_tenant_stacks_path,
-                      :onchange => 'stacksTenantSelected(this);', :help_inline => :indicator} %>
-    </div>
+<div class="row">
+  <div id="title_action" class="col-sm-12">
+    <%= link_to(
+          'New Stack',
+          new_compute_resource_tenant_stack_path(
+            :compute_resource_id => @compute_resource.id,
+            :tenant_id => @tenant.id
+          ),
+          :class => 'btn btn-success'
+        ) %>
   </div>
 </div>
 
-<div id="stacks-list">
-  <%= render 'stacks' %>
-</div>
+<%# add: sorting, filters, checkboxes %>
+<table class="table table-bordered table-striped table-two-pane">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Status</th>
+    <th>Creation time</th>
+    <th>Updated time</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% for stack in @stacks %>
+    <tr>
+      <td><%= h stack.stack_name %></td>
+      <td><%= h stack.description %></td>
+      <td><%= h stack.stack_status %></td>
+      <td><%= stack.creation_time %></td>
+      <td><%= stack.updated_time %></td>
+      <td>
+        <%= link_to(
+              'Delete',
+              destroy_stack_compute_resource_tenant_stacks_path(
+                :compute_resource_id => @compute_resource.id,
+                :tenant_id => @tenant.id,
+                :id => stack.id
+              ),
+              :method => :delete, :confirm => 'Are you sure?', :class => 'delete'
+            )%>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

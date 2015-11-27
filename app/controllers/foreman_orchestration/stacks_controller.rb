@@ -1,13 +1,18 @@
 module ForemanOrchestration
   class StacksController < ::ApplicationController
+    def all
+      @compute_resources = Foreman::Model::Openstack.all
+      unless @compute_resources.empty?
+        @compute_resource = @compute_resources.first
+        @tenants = @compute_resource.orchestration_clients
+      end
+    end
+
     def index
-      # TODO: for demo it is just the first one compute resource
-      # TODO: but we have to change it later
-      compute_resource = default_compute_resource
-      # TODO: select only enabled: true tenants?
-      @tenants = compute_resource.tenants
-      @tenant = compute_resource.tenant
-      @stacks = compute_resource.stacks
+      @compute_resource = find_compute_resource
+      @tenant = @compute_resource.orchestration_client_for(params[:tenant_id])
+      @stacks = @tenant.stacks
+      render layout: false
     end
 
     def new
@@ -25,6 +30,7 @@ module ForemanOrchestration
     end
 
     def destroy_stack
+      # TODO: compute_resource_id
       @stack = Stack.new(
         compute_resource: default_compute_resource,
         name: params[:name],
@@ -35,14 +41,6 @@ module ForemanOrchestration
     end
 
     # ajax methods
-    def for_tenant
-      # TODO: what to do with errors? (incorrect tenant name etc.)
-      compute_resource = default_compute_resource
-      @tenant = params[:tenant]
-      @stacks = compute_resource.stacks_for_tenant(@tenant)
-      render partial: 'stacks'
-    end
-
     def params_for_template
       template = StackTemplate.find(params[:template_id])
       render partial: 'params', locals: {template: template, parameters: {}}
@@ -58,6 +56,10 @@ module ForemanOrchestration
 
     def default_compute_resource
       Foreman::Model::Openstack.first
+    end
+
+    def find_compute_resource
+      ComputeResource.find(params[:compute_resource_id])
     end
   end
 end
