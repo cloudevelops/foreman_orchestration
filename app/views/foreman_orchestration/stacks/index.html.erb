@@ -2,7 +2,7 @@
   <div id="title_action" class="col-sm-12">
     <%= link_to(
           'New Stack',
-          new_compute_resource_tenant_stack_path(
+          new_stack_path(
             :compute_resource_id => @compute_resource.id,
             :tenant_id => @tenant.id
           ),

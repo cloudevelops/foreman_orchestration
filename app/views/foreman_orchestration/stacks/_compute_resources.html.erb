@@ -5,7 +5,7 @@
   </div>
 <% else %>
   <%= selectable_tag :compute_resource,
-                     options_from_collection_for_select(@compute_resources, 'id', 'name', @compute_resource.id),
+                     options_from_collection_for_select(@compute_resources, 'id', 'name', @compute_resource.try(:id)),
                      {:label => _('Compute resource'),
                       :onchange => 'stacksComputeResourceSelected(this);',
                       :help_inline => :indicator, :include_blank => true}

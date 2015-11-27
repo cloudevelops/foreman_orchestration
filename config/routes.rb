@@ -5,7 +5,7 @@ Rails.application.routes.draw do
         collection do
           get :for_select
         end
-        resources :stacks, :only => [:index, :new, :create] do
+        resources :stacks, :only => [:index] do
           collection do
             get :params_for_template
             delete :destroy_stack
@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
   end
   scope :module => :foreman_orchestration do
-    resources :stacks, :only => [] do
+    resources :stacks, :only => [:new, :create] do
       collection do
         get :all
       end

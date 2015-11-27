@@ -3,16 +3,16 @@ module ForemanOrchestration
     include ActiveModel::Validations
     include ActiveModel::Conversion
 
-    attr_accessor :compute_resource, :tenant, :name, :template_id, :parameters
+    attr_accessor :compute_resource, :tenant_id, :name, :template_id, :parameters
 
     validates :compute_resource, presence: true
-    validates :tenant, presence: true
+    validates :tenant_id, presence: true
     validates :name, presence: true, format: {with: /^[a-zA-Z][a-zA-Z0-9_.-]*$/}
     validates :template_id, presence: true
 
     def initialize(params = {})
       @compute_resource = params[:compute_resource]
-      @tenant = params[:tenant]
+      @tenant_id = params[:tenant_id]
       @name = params[:name]
       @template_id = params[:template_id]
       @parameters = params[:parameters] || {}
@@ -49,14 +49,14 @@ module ForemanOrchestration
       end
     end
 
-    def compute_resource_tenants
-      compute_resource.tenants
-    end
-
     def template
       if template_id
         @template ||= StackTemplate.find(template_id)
       end
+    end
+
+    def tenant
+      @tenant ||= compute_resource.orchestration_client_for(tenant_id)
     end
 
     private

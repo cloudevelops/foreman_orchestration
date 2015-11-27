@@ -6,7 +6,7 @@
   <%= render partial: 'compute_resources' %>
   <div id="tenants-list">
     <% if @tenants %>
-      <%= render partial: 'foreman_orchestration/tenants/for_select' %>
+      <%= render partial: 'foreman_orchestration/tenants/for_select', locals: {onchange: true}%>
     <% end %>
   </div>
   <div id="stacks-list">

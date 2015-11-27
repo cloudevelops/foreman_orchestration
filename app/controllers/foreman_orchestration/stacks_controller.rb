@@ -1,7 +1,8 @@
 module ForemanOrchestration
   class StacksController < ::ApplicationController
+    before_filter :load_compute_resources, only: [:all, :new]
+
     def all
-      @compute_resources = Foreman::Model::Openstack.all
       unless @compute_resources.empty?
         @compute_resource = @compute_resources.first
         @tenants = @compute_resource.orchestration_clients
@@ -13,14 +14,19 @@ module ForemanOrchestration
     end
 
     def index
-      @compute_resource = find_compute_resource
+      @compute_resource = ::ComputeResource.find(params[:compute_resource_id])
       @tenant = @compute_resource.orchestration_client_for(params[:tenant_id])
       @stacks = @tenant.stacks
       render layout: false
     end
 
     def new
-      @stack = Stack.new(compute_resource: default_compute_resource)
+      @compute_resource = ::ComputeResource.find_by_id(params[:compute_resource_id])
+      if @compute_resource
+        @tenants = @compute_resource.orchestration_clients
+        @tenant = @tenants.find { |t| t.name == @compute_resource.tenant }
+      end
+      @stack = Stack.new(compute_resource: @compute_resource)
     end
 
     def create
@@ -31,6 +37,9 @@ module ForemanOrchestration
       else
         process_error object: @stack
       end
+    end
+
+    def destroy
     end
 
     def destroy_stack
@@ -58,12 +67,8 @@ module ForemanOrchestration
         .merge(compute_resource: default_compute_resource)
     end
 
-    def default_compute_resource
-      Foreman::Model::Openstack.first
-    end
-
-    def find_compute_resource
-      ComputeResource.find(params[:compute_resource_id])
+    def load_compute_resources
+      @compute_resources = ::Foreman::Model::Openstack.all
     end
   end
 end

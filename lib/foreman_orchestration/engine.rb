@@ -32,13 +32,9 @@ module ForemanOrchestration
         # TODO: change controllers and actions to the appropriate ones
         sub_menu :top_menu, :orchestration, :after=> :infrastructure_menu do
           menu :top_menu, :all_stacks, :url_hash => { controller: :'foreman_orchestration/stacks', action: :all }
-          # menu :top_menu, :new_stack, :url_hash => { controller: :'foreman_orchestration/stacks', action: :new }
+          menu :top_menu, :new_stack, :url_hash => { controller: :'foreman_orchestration/stacks', action: :new }
           # menu :top_menu, :stack_templates, :url_hash => { controller: :'foreman_orchestration/stack_templates', action: :index }
         end
-
-        # add dashboard widget
-        # TODO: remove?
-        widget 'foreman_orchestration_widget', name: N_('Foreman plugin template widget'), sizex: 4, sizey: 1
       end
     end
 

@@ -1,21 +1,10 @@
 <%= form_for @stack, url: stacks_path do |f| %>
   <%= base_errors_for @stack %>
 
-  <%= selectable_f f, :tenant,
-                   options_from_collection_for_select(@stack.compute_resource_tenants, 'name', 'name', @stack.tenant),
-                   {}, {label: _('Tenant'), required: true} %>
-  <%= text_f f, :name, required: true, label: _('Stack name'),
-             help_inline: _('This value must match the following pattern: ^[a-zA-Z][a-zA-Z0-9_.-]*$') %>
-  <%= selectable_f f, :template,
-                   options_from_collection_for_select(ForemanOrchestration::StackTemplate.for_select_tag, 'id', 'name', @stack.template_id),
-                   {include_blank: _('Choose a template')},
-                   {:label => _('Template'), :'data-url' => params_for_template_stacks_path ,
-                    :onchange => 'stacksLoadTemplateWithParams(this)', required: true,
-                    :help_inline => :indicator} %>
-  <div id="template-with-params">
-    <% if @stack.template %>
-      <%= render partial: 'params',
-                 locals: {template: @stack.template, parameters: @stack.parameters} %>
+  <%= render partial: 'compute_resources' %>
+  <div id="tenants-list">
+    <% if @tenants %>
+      <%= render partial: 'foreman_orchestration/tenants/for_select', locals: {onchange: false} %>
     <% end %>
   </div>
 <% end %>
