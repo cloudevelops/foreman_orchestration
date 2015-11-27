@@ -7,7 +7,6 @@ Rails.application.routes.draw do
         end
         resources :stacks, :only => [:index] do
           collection do
-            get :params_for_template
             delete :destroy_stack
           end
         end
@@ -20,6 +19,10 @@ Rails.application.routes.draw do
         get :all
       end
     end
-    resources :stack_templates
+    resources :stack_templates do
+      member do
+        get :with_params
+      end
+    end
   end
 end

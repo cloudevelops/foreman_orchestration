@@ -24,7 +24,7 @@ module ForemanOrchestration
       @compute_resource = ::ComputeResource.find_by_id(params[:compute_resource_id])
       if @compute_resource
         @tenants = @compute_resource.orchestration_clients
-        @tenant = @tenants.find { |t| t.name == @compute_resource.tenant }
+        @tenant = @tenants.find { |t| t.id == params[:tenant_id] }
       end
       @stack = Stack.new(compute_resource: @compute_resource)
     end
@@ -53,18 +53,11 @@ module ForemanOrchestration
       redirect_to stacks_path, notice: "Stack #{@stack.name} is being deleted now"
     end
 
-    # ajax methods
-    def params_for_template
-      template = StackTemplate.find(params[:template_id])
-      render partial: 'params', locals: {template: template, parameters: {}}
-    end
-
     private
 
     def new_stack_params
       params.fetch(:foreman_orchestration_stack)
-        .slice(:tenant, :name, :template_id, :parameters)
-        .merge(compute_resource: default_compute_resource)
+        .slice(:compute_resource_id, :tenant_id, :name, :template_id, :parameters)
     end
 
     def load_compute_resources

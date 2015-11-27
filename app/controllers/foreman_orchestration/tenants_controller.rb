@@ -3,7 +3,7 @@ module ForemanOrchestration
     def for_select
       @compute_resource = ::ComputeResource.find(params[:compute_resource_id])
       @tenants = @compute_resource.tenants
-      render partial: 'for_select', locals: {onchange: true}
+      render partial: 'for_select'
     end
   end
 end

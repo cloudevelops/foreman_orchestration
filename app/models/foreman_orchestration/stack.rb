@@ -3,15 +3,15 @@ module ForemanOrchestration
     include ActiveModel::Validations
     include ActiveModel::Conversion
 
-    attr_accessor :compute_resource, :tenant_id, :name, :template_id, :parameters
+    attr_accessor :compute_resource_id, :tenant_id, :name, :template_id, :parameters
 
-    validates :compute_resource, presence: true
+    validates :compute_resource_id, presence: true
     validates :tenant_id, presence: true
     validates :name, presence: true, format: {with: /^[a-zA-Z][a-zA-Z0-9_.-]*$/}
     validates :template_id, presence: true
 
     def initialize(params = {})
-      @compute_resource = params[:compute_resource]
+      @compute_resource_id = params[:compute_resource_id]
       @tenant_id = params[:tenant_id]
       @name = params[:name]
       @template_id = params[:template_id]
@@ -24,15 +24,7 @@ module ForemanOrchestration
 
     def save
       if valid?
-        params = {
-          files: {},
-          disable_rollback: true,
-          parameters: parameters,
-          stack_name: name,
-          environment: {},
-          template: load_yaml_template
-        }
-        compute_resource.create_stack(tenant, params)
+        tenant.create_stack(self)
       else
         false
       end
@@ -55,15 +47,20 @@ module ForemanOrchestration
       end
     end
 
-    def tenant
-      @tenant ||= compute_resource.orchestration_client_for(tenant_id)
+    def template_body
+      if template
+        YAML.load(template.template)
+      end
     end
 
     private
 
-    def load_yaml_template
-      template = StackTemplate.find(template_id).template
-      YAML.load(template)
+    def tenant
+      @tenant ||= compute_resource.orchestration_client_for(tenant_id)
+    end
+
+    def compute_resource
+      @compute_resource ||= ::ComputeResource.find(compute_resource_id)
     end
   end
 end

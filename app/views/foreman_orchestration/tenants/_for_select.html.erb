@@ -6,7 +6,7 @@
   <%= selectable_tag :tenant,
                      options_from_collection_for_select(@tenants, 'id', 'name', @tenant.try(:id)),
                      {:label => _('Tenant'),
-                      :onchange => (onchange ? 'stacksTenantSelected(this);' : ''),
+                      :onchange => 'stacksTenantSelected(this);',
                       :'data-url' => compute_resource_tenants_path(@compute_resource),
                       :help_inline => :indicator, :include_blank => true}
   %>

@@ -9,22 +9,19 @@ module ForemanOrchestration
     end
 
     def stacks
-      # client.stacks
-      [
-        {
-          id: 'some-id-6664',
-          stack_name: 'some',
-          description: 'ma cool stack',
-          stack_status: 'SMOKIN',
-          creation_time: Time.now - 2.days,
-          updated_time: Time.now - 1.day
-        }
-      ].map { |r| OpenStruct.new r }
+      client.stacks
     end
 
-    def create_stack
-      # TODO:
-      # client.create_stack(params)
+    def create_stack(stack)
+      params = {
+        files: {},
+        disable_rollback: true,
+        parameters: stack.parameters,
+        stack_name: stack.name,
+        environment: {},
+        template: stack.template_body
+      }
+      client.create_stack(params)
     end
 
     def delete_stack

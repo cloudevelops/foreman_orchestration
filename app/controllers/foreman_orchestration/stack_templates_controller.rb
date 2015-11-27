@@ -1,6 +1,6 @@
 module ForemanOrchestration
   class StackTemplatesController < ::ApplicationController
-    before_filter :find_resource, only: [:edit, :update, :destroy]
+    before_filter :find_resource, only: [:edit, :update, :destroy, :with_params]
 
     def index
       @templates = StackTemplate.order(:name).all
@@ -36,6 +36,11 @@ module ForemanOrchestration
       else
         process_error object: @template
       end
+    end
+
+    # ajax methods
+    def with_params
+      render partial: 'with_params', locals: {template: @template, parameters: {}}
     end
 
     private
