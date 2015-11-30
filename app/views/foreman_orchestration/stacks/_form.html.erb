@@ -2,7 +2,7 @@
   <%= base_errors_for @stack %>
 
   <%= selectable_f f, :compute_resource_id,
-                   options_from_collection_for_select(@compute_resources, 'id', 'name', @compute_resource.try(:id)),
+                   options_from_collection_for_select(@compute_resources, 'id', 'name', @stack.compute_resource_id),
                    {:include_blank => _('Choose a compute resource')},
                    {:label => _('Compute resource'),
                     :onchange => 'stacksNewComputeResourceSelected(this);',
@@ -11,9 +11,9 @@
 
   <div id="tenants-list-container">
     <div id="tenants-list">
-      <% if @tenants %>
+      <% if @stack.tenants %>
         <%= selectable_f f, :tenant_id,
-                         options_from_collection_for_select(@tenants, 'id', 'name', @tenant.try(:id)),
+                         options_from_collection_for_select(@stack.tenants, 'id', 'name', @stack.tenant_id),
                          {:include_blank => _('Choose a tenant')},
                          {:label => _('Tenant'), :required => true} %>
 
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div id="main-stack-parameters" class="<%= 'hidden' unless @compute_resource %>">
+  <div id="main-stack-parameters" class="<%= 'hidden' unless @stack.compute_resource_id %>">
     <%= text_f f, :name, required: true, label: _('Stack name'),
                help_inline: _('This value must match the following pattern: ^[a-zA-Z][a-zA-Z0-9_.-]*$') %>
     <%= selectable_f f, :template_id,

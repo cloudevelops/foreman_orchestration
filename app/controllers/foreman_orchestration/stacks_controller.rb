@@ -17,24 +17,21 @@ module ForemanOrchestration
       @compute_resource = ::ComputeResource.find(params[:compute_resource_id])
       @tenant = @compute_resource.orchestration_client_for(params[:tenant_id])
       @stacks = @tenant.stacks
-      render layout: false
+      render layout: !ajax?
     end
 
     def new
-      @compute_resource = ::ComputeResource.find_by_id(params[:compute_resource_id])
-      if @compute_resource
-        @tenants = @compute_resource.orchestration_clients
-        @tenant = @tenants.find { |t| t.id == params[:tenant_id] }
-      end
-      @stack = Stack.new(compute_resource: @compute_resource)
+      @stack = Stack.new(compute_resource_id: params[:compute_resource_id],
+                         tenant_id: params[:tenant_id])
     end
 
     def create
-      @stack = Stack.new(new_stack_params)
+      @stack = Stack.new(stack_params)
       if @stack.save
-        process_success object: @stack,
-                        success_msg: "Stack #{@stack.name} is being created now"
+        flash[:notice] = "Stack '#{@stack.name}' is being created now"
+        redirect_to all_stacks_path
       else
+        load_compute_resources
         process_error object: @stack
       end
     end
@@ -55,7 +52,7 @@ module ForemanOrchestration
 
     private
 
-    def new_stack_params
+    def stack_params
       params.fetch(:foreman_orchestration_stack)
         .slice(:compute_resource_id, :tenant_id, :name, :template_id, :parameters)
     end

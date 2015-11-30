@@ -53,14 +53,23 @@ module ForemanOrchestration
       end
     end
 
-    private
-
     def tenant
-      @tenant ||= compute_resource.orchestration_client_for(tenant_id)
+      if tenant_id && compute_resource
+        @tenant ||= compute_resource.orchestration_client_for(tenant_id)
+      end
     end
 
     def compute_resource
-      @compute_resource ||= ::ComputeResource.find(compute_resource_id)
+      if compute_resource_id
+        @compute_resource ||= ::ComputeResource.find(compute_resource_id)
+      end
+    end
+
+    def tenants
+      # TODO: find a better place for this method
+      if compute_resource
+        @tenants ||= compute_resource.orchestration_clients
+      end
     end
   end
 end
