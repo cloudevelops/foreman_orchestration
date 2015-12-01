@@ -24,9 +24,9 @@ module ForemanOrchestration
       client.create_stack(params)
     end
 
-    def delete_stack
-      # TODO:
-      # client.delete_stack(stack)
+    def delete_stack(stack)
+      fog_model = fog_model_for_stack(stack.id)
+      client.delete_stack(fog_model)
     end
 
     private
@@ -37,6 +37,15 @@ module ForemanOrchestration
 
     def client
       @client ||= Fog::Orchestration.new(credentials)
+    end
+
+    def fog_model_for_stack(id)
+      model = stacks.find { |s| s.id == id }
+      if model
+        model
+      else
+        raise "Cannot find a stack with the specified id: #{id}"
+      end
     end
   end
 end

@@ -37,17 +37,11 @@ module ForemanOrchestration
     end
 
     def destroy
-    end
-
-    def destroy_stack
-      # TODO: compute_resource_id
-      @stack = Stack.new(
-        compute_resource: default_compute_resource,
-        name: params[:name],
-        tenant: params[:tenant]
-      )
+      @stack = Stack.new(compute_resource_id: params[:compute_resource_id],
+                         tenant_id: params[:tenant_id],
+                         id: params[:id])
       @stack.destroy
-      redirect_to stacks_path, notice: "Stack #{@stack.name} is being deleted now"
+      redirect_to all_stacks_path, notice: 'Stack is being deleted now'
     end
 
     private

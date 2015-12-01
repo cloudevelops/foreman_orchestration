@@ -5,11 +5,7 @@ Rails.application.routes.draw do
         collection do
           get :for_select
         end
-        resources :stacks, :only => [:index] do
-          collection do
-            delete :destroy_stack
-          end
-        end
+        resources :stacks, :only => [:index, :destroy]
       end
     end
   end

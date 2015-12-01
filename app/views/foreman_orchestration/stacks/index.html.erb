@@ -34,12 +34,13 @@
       <td>
         <%= link_to(
               'Delete',
-              destroy_stack_compute_resource_tenant_stacks_path(
+              compute_resource_tenant_stack_path(
                 :compute_resource_id => @compute_resource.id,
                 :tenant_id => @tenant.id,
                 :id => stack.id
               ),
-              :method => :delete, :confirm => 'Are you sure?', :class => 'delete'
+              :method => :delete, :confirm => 'Are you sure?',
+              :class => 'delete'
             )%>
       </td>
     </tr>

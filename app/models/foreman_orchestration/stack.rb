@@ -3,7 +3,8 @@ module ForemanOrchestration
     include ActiveModel::Validations
     include ActiveModel::Conversion
 
-    attr_accessor :compute_resource_id, :tenant_id, :name, :template_id, :parameters
+    attr_accessor :id, :compute_resource_id, :tenant_id, :name, :template_id
+    attr_accessor :parameters
 
     validates :compute_resource_id, presence: true
     validates :tenant_id, presence: true
@@ -11,6 +12,7 @@ module ForemanOrchestration
     validates :template_id, presence: true
 
     def initialize(params = {})
+      @id = params[:id]
       @compute_resource_id = params[:compute_resource_id]
       @tenant_id = params[:tenant_id]
       @name = params[:name]
@@ -31,14 +33,7 @@ module ForemanOrchestration
     end
 
     def destroy
-      all_stacks = compute_resource.stacks_for_tenant(tenant)
-      stack = all_stacks.find { |s| s.stack_name == name }
-      if stack
-        compute_resource.delete_stack(tenant, stack)
-      else
-        message = "Cannot find stack '#{name}' in tenant '#{tenant}'"
-        raise ActiveRecord::RecordNotFound, message
-      end
+      tenant.delete_stack(self)
     end
 
     def template
