@@ -4,12 +4,7 @@ module ForemanOrchestration
 
     def all
       unless @compute_resources.empty?
-        @compute_resource = @compute_resources.first
-        @tenants = @compute_resource.orchestration_clients
-        unless @tenants.empty?
-          @tenant = @tenants.find { |t| t.name == @compute_resource.tenant }
-          @stacks = @tenant.stacks
-        end
+        find_default_compute_resource
       end
     end
 
@@ -53,6 +48,25 @@ module ForemanOrchestration
 
     def load_compute_resources
       @compute_resources = ::Foreman::Model::Openstack.all
+    end
+
+    def find_default_compute_resource
+      @compute_resource = @compute_resources.find do |resource|
+        resource.is_default
+      end
+      if @compute_resource
+        @tenants = @compute_resource.orchestration_clients
+        find_default_tenant
+      end
+    end
+
+    def find_default_tenant
+      @tenant = @tenants.find do |tenant|
+        tenant.id == @compute_resource.default_tenant_id
+      end
+      if @tenant
+        @stacks = @tenant.stacks
+      end
     end
   end
 end

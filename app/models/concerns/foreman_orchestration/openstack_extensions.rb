@@ -17,5 +17,28 @@ module ForemanOrchestration
         raise ActiveRecord::RecordNotFound, "Cannot find tenant: id='#{tenant_id}'"
       end
     end
+
+    def is_default
+      attrs[:is_default]
+    end
+
+    def mark_as_default
+      ActiveRecord::Base.transaction do
+        self.class.all.each do |record|
+          record.attrs[:is_default] = false
+          record.save!
+        end
+        attrs[:is_default] = true
+        save!
+      end
+    end
+
+    def default_tenant_id
+      attrs[:default_tenant_id]
+    end
+
+    def default_tenant_id=(tenant_id)
+      attrs[:default_tenant_id] = tenant_id
+    end
   end
 end

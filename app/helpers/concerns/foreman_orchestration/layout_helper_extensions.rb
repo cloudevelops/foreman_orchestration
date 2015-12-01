@@ -10,6 +10,10 @@ module ForemanOrchestration
           add_help_to_label('col-md-4', label, help) do
             addClass options, 'form-control'
             select_tag name, options_tags, options
+          end + if block_given?
+            content_tag(:div, :class => 'col-md-2') do
+              yield
+            end
           end
         end
       end

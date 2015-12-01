@@ -1,3 +1,12 @@
+function updateDefaultComputeResourceButton(defaultValue, currentValue) {
+  var $button = $('#set-default-compute-resource');
+  if (currentValue == defaultValue || currentValue == '') {
+    $button.prop('disabled', true);
+  } else {
+    $button.prop('disabled', false);
+  }
+}
+
 function stacksComputeResourceSelected(item) {
   var $item = $(item);
   var computeResource = $item.val();
@@ -7,12 +16,14 @@ function stacksComputeResourceSelected(item) {
     $item.indicator_show();
     // TODO: use url helper somehow?
     var url = '/compute_resources/' + computeResource + '/tenants/for_select';
+    var defaultValue = $item.data('default-value');
     var $tenants = $('#tenants-list');
     $('#stacks-list').empty();
     $tenants.empty();
     $tenants.load(url, function () {
       $tenants.find('select').select2({allowClear: true});
       $item.indicator_hide();
+      updateDefaultComputeResourceButton(defaultValue, computeResource);
     });
   }
 }

@@ -3,7 +3,25 @@
 
 <%= form_for :stack do %>
   <% title _("All Stacks") %>
-  <%= render partial: 'compute_resources' %>
+
+  <% if @compute_resources.empty? %>
+    <div class="alert alert-info">
+      There are no compute resources. But you can create a new one
+      <%= link_to 'here', new_compute_resource_path %>
+    </div>
+  <% else %>
+    <%= selectable_tag :compute_resource,
+                       options_from_collection_for_select(@compute_resources, 'id', 'name', @compute_resource.try(:id)),
+                       {:label => _('Compute resource'),
+                        :onchange => 'stacksComputeResourceSelected(this);',
+                        :help_inline => :indicator, :include_blank => true,
+                        :'data-default-value' => @compute_resource.try(:id) } do %>
+      <button id="set-default-compute-resource" type="button" class="btn btn-primary" disabled="disabled">
+        Set as default
+      </button>
+    <% end %>
+  <% end %>
+
   <div id="tenants-list">
     <% if @tenants %>
       <%= render partial: 'foreman_orchestration/tenants/for_select' %>

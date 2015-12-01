@@ -5,6 +5,9 @@ Rails.application.routes.draw do
         collection do
           get :for_select
         end
+        member do
+          post :default
+        end
         resources :stacks, :only => [:index, :destroy]
       end
     end

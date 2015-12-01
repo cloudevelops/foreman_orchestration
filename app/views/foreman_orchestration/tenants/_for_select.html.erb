@@ -8,6 +8,9 @@
                      {:label => _('Tenant'),
                       :onchange => 'stacksTenantSelected(this);',
                       :'data-url' => compute_resource_tenants_path(@compute_resource),
-                      :help_inline => :indicator, :include_blank => true}
-  %>
+                      :help_inline => :indicator, :include_blank => true} do %>
+    <button id="set-default-tenant" type="button" class="btn btn-primary" disabled="disabled">
+      Set as default
+    </button>
+  <% end %>
 <% end %>
