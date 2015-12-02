@@ -13,11 +13,11 @@ module ForemanOrchestration
 
     def initialize(params = {})
       @id = params[:id]
-      @compute_resource_id = params[:compute_resource_id]
-      @tenant_id = params[:tenant_id]
       @name = params[:name]
       @template_id = params[:template_id]
       @parameters = params[:parameters] || {}
+      compute_resource_params(params)
+      tenant_params(params)
     end
 
     def persisted?
@@ -56,7 +56,7 @@ module ForemanOrchestration
 
     def compute_resource
       if compute_resource_id
-        @compute_resource ||= ::ComputeResource.find(compute_resource_id)
+        @compute_resource ||= Foreman::Model::Openstack.find(compute_resource_id)
       end
     end
 
@@ -64,6 +64,26 @@ module ForemanOrchestration
       # TODO: find a better place for this method
       if compute_resource
         @tenants ||= compute_resource.orchestration_clients
+      end
+    end
+
+    private
+
+    def tenant_params(params)
+      if params[:tenant]
+        @tenant = params[:tenant]
+        @tenant_id = @tenant.id
+      else
+        @tenant_id = params[:tenant_id]
+      end
+    end
+
+    def compute_resource_params(params)
+      if params[:compute_resource]
+        @compute_resource = params[:compute_resource]
+        @compute_resource_id = @compute_resource.id
+      else
+        @compute_resource_id = params[:compute_resource_id]
       end
     end
   end
