@@ -1,5 +1,5 @@
-function updateDefaultComputeResourceButton(defaultValue, currentValue) {
-  var $button = $('#set-default-compute-resource');
+function updateDefaultEntityButton(selector, defaultValue, currentValue) {
+  var $button = $(selector);
   if (currentValue == defaultValue || currentValue == '') {
     $button.prop('disabled', true);
   } else {
@@ -23,7 +23,7 @@ function stacksComputeResourceSelected(item) {
     $tenants.load(url, function () {
       $tenants.find('select').select2({allowClear: true});
       $item.indicator_hide();
-      updateDefaultComputeResourceButton(defaultValue, computeResource);
+      updateDefaultEntityButton('#set-default-compute-resource', defaultValue, computeResource);
     });
   }
 }
@@ -56,11 +56,13 @@ function stacksTenantSelected(item) {
     return false;
   } else {
     $item.indicator_show();
-    var url = $item.data('url') + '/' + tenant + '/stacks';
+    var url = $item.data('url').replace(':id', tenant);
+    var defaultValue = $item.data('default-value');
     var $stacks = $('#stacks-list');
     $stacks.empty();
     $stacks.load(url, function () {
       $item.indicator_hide();
+      updateDefaultEntityButton('#set-default-tenant', defaultValue, tenant);
     });
   }
 }
@@ -83,24 +85,45 @@ function stacksLoadTemplateWithParams(item) {
   }
 }
 
-function setDefaultComputeResource(item) {
-  var $item = $(item);
+function setDefaultComputeResource(button) {
+  var $button = $(button);
   var $select = $('#compute_resource');
   var computeResourceId = $select.val();
-  if (!$item.data('processing') && computeResourceId !== '') {
-    $item.data('processing', true);
-    var url = $item.data('url').replace(':id', computeResourceId);
-    var oldText = $item.text();
-    $item.text($item.data('disable-with'));
+  if (!$button.data('processing') && computeResourceId !== '') {
+    $button.data('processing', true);
+    var url = $button.data('url').replace(':id', computeResourceId);
+    var oldText = $button.text();
+    $button.text($button.data('disable-with'));
     $.post(url).done(function () {
-      $item.prop('disabled', true);
+      $button.prop('disabled', true);
       $select.data('default-value', Number(computeResourceId));
     }).fail(function () {
-      // TODO: do something better?
       alert('Something went wrong');
     }).always(function () {
-      $item.text(oldText);
-      $item.data('processing', false);
+      $button.text(oldText);
+      $button.data('processing', false);
+    });
+  }
+  return false;
+}
+
+function setDefaultTenant(button) {
+  var $button = $(button);
+  var $select = $('#tenant');
+  var tenantId = $select.val();
+  if (!$button.data('processing') && tenantId !== '') {
+    $button.data('processing', true);
+    var url = $button.data('url').replace(':id', tenantId);
+    var oldText = $button.text();
+    $button.text($button.data('disable-with'));
+    $.post(url).done(function () {
+      $button.prop('disabled', true);
+      $select.data('default-value', tenantId);
+    }).fail(function () {
+      alert('Something went wrong');
+    }).always(function () {
+      $button.text(oldText);
+      $button.data('processing', false);
     });
   }
   return false;

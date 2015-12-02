@@ -9,7 +9,7 @@ module ForemanOrchestration
     end
 
     def default
-      tenant = @compute_resource.orchestration_client_for(params[:tenant_id])
+      tenant = @compute_resource.orchestration_client_for(params[:id])
       @compute_resource.default_tenant_id = tenant.id
       @compute_resource.save!
       respond_to do |format|
