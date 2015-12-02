@@ -1,0 +1,40 @@
+<% javascript 'foreman_orchestration/stacks' %>
+<% stylesheet 'foreman_orchestration/stacks' %>
+
+<%= form_for :stack do %>
+  <% title _("All Stacks") %>
+
+  <% if @compute_resources.empty? %>
+    <div class="alert alert-info">
+      There are no compute resources. But you can create a new one
+      <%= link_to 'here', new_compute_resource_path %>
+    </div>
+  <% else %>
+    <%= selectable_tag :compute_resource,
+                       options_from_collection_for_select(@compute_resources, 'id', 'name', @compute_resource.try(:id)),
+                       {:label => _('Compute resource'),
+                        :onchange => 'stacksComputeResourceSelected(this);',
+                        :help_inline => :indicator, :include_blank => true,
+                        :'data-url' => for_select_compute_resource_tenants_path(':id'),
+                        :'data-default-value' => @compute_resource.try(:id) } do %>
+      <%= content_tag :button, :id => 'set-default-compute-resource',
+                      :type => 'button', :class => 'btn btn-primary',
+                      :disabled => 'disabled', :onclick => 'setDefaultComputeResource(this);',
+                      :'data-url' => default_compute_resource_path(':id'),
+                      :'data-disable-with' => 'Processing...' do -%>
+        Set as default
+      <% end -%>
+    <% end %>
+  <% end %>
+
+  <div id="tenants-list">
+    <% if @tenants %>
+      <%= render partial: 'foreman_orchestration/tenants/for_select' %>
+    <% end %>
+  </div>
+  <div id="stacks-list">
+    <% if @stacks %>
+      <%= render template: 'foreman_orchestration/stacks/index', layout: nil %>
+    <% end %>
+  </div>
+<% end %>

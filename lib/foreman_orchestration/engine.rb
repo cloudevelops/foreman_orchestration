@@ -7,7 +7,6 @@ module ForemanOrchestration
     config.autoload_paths += Dir["#{config.root}/app/controllers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/helpers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
-    config.autoload_paths += Dir["#{config.root}/app/overrides"]
 
     # Add any db migrations
     initializer 'foreman_orchestration.load_app_instance_data' do |app|
@@ -20,25 +19,13 @@ module ForemanOrchestration
       Foreman::Plugin.register :foreman_orchestration do
         requires_foreman '>= 1.4'
 
-        # Add permissions
-        # TODO: update
-        security_block :foreman_orchestration do
-          permission :view_foreman_orchestration, :'foreman_orchestration/hosts' => [:new_action]
-        end
+        # TODO: Add permissions
 
-        # Add a new role called 'Discovery' if it doesn't exist
-        role 'ForemanOrchestration', [:view_foreman_orchestration]
-
-        # TODO: change controllers and actions to the appropriate ones
         sub_menu :top_menu, :orchestration, :after=> :infrastructure_menu do
-          menu :top_menu, :all_stacks, :url_hash => { controller: :'foreman_orchestration/stacks', action: :index }
+          menu :top_menu, :all_stacks, :url_hash => { controller: :'foreman_orchestration/stacks', action: :all }
           menu :top_menu, :new_stack, :url_hash => { controller: :'foreman_orchestration/stacks', action: :new }
           menu :top_menu, :stack_templates, :url_hash => { controller: :'foreman_orchestration/stack_templates', action: :index }
         end
-
-        # add dashboard widget
-        # TODO: remove?
-        widget 'foreman_orchestration_widget', name: N_('Foreman plugin template widget'), sizex: 4, sizey: 1
       end
     end
 
@@ -61,10 +48,9 @@ module ForemanOrchestration
     # Include concerns in this config.to_prepare block
     config.to_prepare do
       begin
-        # TODO: cleanup here
-        # Host::Managed.send(:include, ForemanOrchestration::HostExtensions)
+        LayoutHelper.send(:include, ForemanOrchestration::LayoutHelperExtensions)
+        ComputeResourcesController.send(:include, ForemanOrchestration::ComputeResourcesControllerExtensions)
         Foreman::Model::Openstack.send(:include, ForemanOrchestration::OpenstackExtensions)
-        HostsHelper.send(:include, ForemanOrchestration::HostsHelperExtensions)
       rescue => e
         Rails.logger.warn "ForemanOrchestration: skipping engine hook (#{e})"
       end

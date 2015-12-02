@@ -3,16 +3,18 @@ module ForemanOrchestration
     include ActiveModel::Validations
     include ActiveModel::Conversion
 
-    attr_accessor :compute_resource, :tenant, :name, :template_id, :parameters
+    attr_accessor :id, :compute_resource_id, :tenant_id, :name, :template_id
+    attr_accessor :parameters
 
-    validates :compute_resource, presence: true
-    validates :tenant, presence: true
+    validates :compute_resource_id, presence: true
+    validates :tenant_id, presence: true
     validates :name, presence: true, format: {with: /^[a-zA-Z][a-zA-Z0-9_.-]*$/}
     validates :template_id, presence: true
 
     def initialize(params = {})
-      @compute_resource = params[:compute_resource]
-      @tenant = params[:tenant]
+      @id = params[:id]
+      @compute_resource_id = params[:compute_resource_id]
+      @tenant_id = params[:tenant_id]
       @name = params[:name]
       @template_id = params[:template_id]
       @parameters = params[:parameters] || {}
@@ -24,33 +26,14 @@ module ForemanOrchestration
 
     def save
       if valid?
-        params = {
-          files: {},
-          disable_rollback: true,
-          parameters: parameters,
-          stack_name: name,
-          environment: {},
-          template: load_yaml_template
-        }
-        compute_resource.create_stack(tenant, params)
+        tenant.create_stack(self)
       else
         false
       end
     end
 
     def destroy
-      all_stacks = compute_resource.stacks_for_tenant(tenant)
-      stack = all_stacks.find { |s| s.stack_name == name }
-      if stack
-        compute_resource.delete_stack(tenant, stack)
-      else
-        message = "Cannot find stack '#{name}' in tenant '#{tenant}'"
-        raise ActiveRecord::RecordNotFound, message
-      end
-    end
-
-    def compute_resource_tenants
-      compute_resource.tenants
+      tenant.delete_stack(self)
     end
 
     def template
@@ -59,11 +42,29 @@ module ForemanOrchestration
       end
     end
 
-    private
+    def template_body
+      if template
+        YAML.load(template.template)
+      end
+    end
 
-    def load_yaml_template
-      template = StackTemplate.find(template_id).template
-      YAML.load(template)
+    def tenant
+      if tenant_id && compute_resource
+        @tenant ||= compute_resource.orchestration_client_for(tenant_id)
+      end
+    end
+
+    def compute_resource
+      if compute_resource_id
+        @compute_resource ||= ::ComputeResource.find(compute_resource_id)
+      end
+    end
+
+    def tenants
+      # TODO: find a better place for this method
+      if compute_resource
+        @tenants ||= compute_resource.orchestration_clients
+      end
     end
   end
 end
