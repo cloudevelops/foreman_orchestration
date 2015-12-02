@@ -3,8 +3,11 @@ module ForemanOrchestration
     before_filter :load_compute_resources, only: [:all, :new]
 
     def all
-      unless @compute_resources.empty?
-        find_default_compute_resource
+      @compute_resource = default_compute_resource(@compute_resources)
+      if @compute_resource
+        @tenants = @compute_resource.orchestration_clients
+        @tenant = @compute_resource.default_tenant
+        @stacks = @tenant.stacks if @tenant
       end
     end
 
@@ -50,23 +53,8 @@ module ForemanOrchestration
       @compute_resources = ::Foreman::Model::Openstack.all
     end
 
-    def find_default_compute_resource
-      @compute_resource = @compute_resources.find do |resource|
-        resource.is_default
-      end
-      if @compute_resource
-        @tenants = @compute_resource.orchestration_clients
-        find_default_tenant
-      end
-    end
-
-    def find_default_tenant
-      @tenant = @tenants.find do |tenant|
-        tenant.id == @compute_resource.default_tenant_id
-      end
-      if @tenant
-        @stacks = @tenant.stacks
-      end
+    def default_compute_resource(compute_resources)
+      compute_resources.find(&:is_default) || compute_resources.first
     end
   end
 end

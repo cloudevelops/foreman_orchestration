@@ -4,18 +4,17 @@ module ForemanOrchestration
 
     def orchestration_clients
       # TODO: select only enabled: true tenants?
-      tenants.map do |t|
-        ForemanOrchestration::OrchestrationClient.new(t, fog_credentials)
+      @orchestration_clients ||= tenants.map do |t|
+        create_orchestration_client(t)
       end
     end
 
     def orchestration_client_for(tenant_id)
-      tenant = tenants.find { |t| t.id == tenant_id }
-      if tenant
-        ForemanOrchestration::OrchestrationClient.new(tenant, fog_credentials)
-      else
-        raise ActiveRecord::RecordNotFound, "Cannot find tenant: id='#{tenant_id}'"
-      end
+      orchestration_clients.find { |client| client.id == tenant_id }
+    end
+
+    def create_orchestration_client(tenant)
+      ForemanOrchestration::OrchestrationClient.new(tenant, fog_credentials)
     end
 
     def is_default
@@ -39,6 +38,14 @@ module ForemanOrchestration
 
     def default_tenant_id=(tenant_id)
       attrs[:default_tenant_id] = tenant_id
+    end
+
+    def default_tenant
+      if default_tenant_id
+        orchestration_client_for(default_tenant_id)
+      else
+        orchestration_clients.first
+      end
     end
   end
 end
