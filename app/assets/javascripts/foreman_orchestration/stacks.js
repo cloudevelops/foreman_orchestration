@@ -14,8 +14,7 @@ function stacksComputeResourceSelected(item) {
     return false;
   } else {
     $item.indicator_show();
-    // TODO: use url helper somehow?
-    var url = '/compute_resources/' + computeResource + '/tenants/for_select';
+    var url = $item.data('url').replace(':id', computeResource);
     var defaultValue = $item.data('default-value');
     var $tenants = $('#tenants-list');
     $('#stacks-list').empty();
