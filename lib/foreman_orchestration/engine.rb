@@ -57,8 +57,9 @@ module ForemanOrchestration
     # Include concerns in this config.to_prepare block
     config.to_prepare do
       begin
-        Foreman::Model::Openstack.send(:include, ForemanOrchestration::OpenstackExtensions)
         LayoutHelper.send(:include, ForemanOrchestration::LayoutHelperExtensions)
+        ComputeResourcesController.send(:include, ForemanOrchestration::ComputeResourcesControllerExtensions)
+        Foreman::Model::Openstack.send(:include, ForemanOrchestration::OpenstackExtensions)
       rescue => e
         Rails.logger.warn "ForemanOrchestration: skipping engine hook (#{e})"
       end

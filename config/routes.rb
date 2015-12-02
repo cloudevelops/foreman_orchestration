@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   resources :compute_resources, :only => [] do
+    member do
+      post :default
+    end
     scope :module => :foreman_orchestration do
       resources :tenants, :only => [:index] do
         collection do

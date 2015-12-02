@@ -82,3 +82,26 @@ function stacksLoadTemplateWithParams(item) {
     });
   }
 }
+
+function setDefaultComputeResource(item) {
+  var $item = $(item);
+  var $select = $('#compute_resource');
+  var computeResourceId = $select.val();
+  if (!$item.data('processing') && computeResourceId !== '') {
+    $item.data('processing', true);
+    var url = $item.data('url').replace(':id', computeResourceId);
+    var oldText = $item.text();
+    $item.text($item.data('disable-with'));
+    $.post(url).done(function () {
+      $item.prop('disabled', true);
+      $select.data('default-value', Number(computeResourceId));
+    }).fail(function () {
+      // TODO: do something better?
+      alert('Something went wrong');
+    }).always(function () {
+      $item.text(oldText);
+      $item.data('processing', false);
+    });
+  }
+  return false;
+}

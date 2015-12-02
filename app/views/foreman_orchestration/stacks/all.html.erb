@@ -16,9 +16,13 @@
                         :onchange => 'stacksComputeResourceSelected(this);',
                         :help_inline => :indicator, :include_blank => true,
                         :'data-default-value' => @compute_resource.try(:id) } do %>
-      <button id="set-default-compute-resource" type="button" class="btn btn-primary" disabled="disabled">
+      <%= content_tag :button, :id => 'set-default-compute-resource',
+                      :type => 'button', :class => 'btn btn-primary',
+                      :disabled => 'disabled', :onclick => 'setDefaultComputeResource(this);',
+                      :'data-url' => default_compute_resource_path(':id'),
+                      :'data-disable-with' => 'Processing...' do -%>
         Set as default
-      </button>
+      <% end -%>
     <% end %>
   <% end %>
 
