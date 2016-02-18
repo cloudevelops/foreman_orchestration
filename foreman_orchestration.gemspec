@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version     = ForemanOrchestration::VERSION
   s.date        = Date.today.to_s
   s.authors     = ['Zdenek Janda', 'Pavel Ivanov']
-  s.email       = ['ivpavig@gmail.com']
+  s.email       = ['ivpavig@gmail.com', 'management@cloudevelops.com']
   s.homepage    = 'https://github.com/cloudevelops/foreman_orchestration'
   s.summary     = 'Orchestration plugin for foreman'
   # also update locale/gemspec.rb

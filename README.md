@@ -2,6 +2,8 @@
 
 *Introdction here*
 
+[![Gem Version](https://badge.fury.io/rb/foreman_orchestration.svg)](https://badge.fury.io/rb/foreman_orchestration)
+
 ## Installation
 
 See [How_to_Install_a_Plugin](http://projects.theforeman.org/projects/foreman/wiki/How_to_Install_a_Plugin)
@@ -14,6 +16,25 @@ for how to install Foreman plugins
 ## TODO
 
 *Todo list here*
+
+## How to push a new version to the RubyGems
+
+- Update the version (lib/foreman_orchestration/version.rb:2)
+- Build a gem
+
+		$ gem build foreman_orchestration.gemspec
+
+- Publish it to the RubyGems
+
+		$ gem push foreman_orchestration-0.0.1.gem
+
+- Check if new version is there
+
+		$ gem list -r foreman_orchestration
+
+		*** REMOTE GEMS ***
+
+		foreman_orchestration (0.0.1)
 
 ## Contributing
 

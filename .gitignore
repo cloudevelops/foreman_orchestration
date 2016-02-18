@@ -10,3 +10,4 @@ locale/*/*.pox
 tags
 .idea
 Gemfile.lock
+*.gem
