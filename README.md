@@ -1,7 +1,5 @@
 # ForemanOrchestration
 
-*Introdction here*
-
 [![Gem Version](https://badge.fury.io/rb/foreman_orchestration.svg)](https://badge.fury.io/rb/foreman_orchestration)
 
 ## Installation
@@ -19,7 +17,7 @@ for how to install Foreman plugins
 
 ## How to push a new version to the RubyGems
 
-- Update the version (lib/foreman_orchestration/version.rb:2)
+- Update the version in this file `lib/foreman_orchestration/version.rb:2`
 - Build a gem
 
 		$ gem build foreman_orchestration.gemspec
